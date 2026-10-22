@@ -1,0 +1,12 @@
+# Companies we track. Edit this file to add or remove tickers.
+# Everyone should use this list — do not hard-code tickers in collector scripts.
+#
+# Final list is still being decided by the team. These are placeholders.
+
+tickers:
+  - symbol: AAPL
+    name: Apple Inc.
+  - symbol: MSFT
+    name: Microsoft Corporation
+  - symbol: GOOGL
+    name: Alphabet Inc.
