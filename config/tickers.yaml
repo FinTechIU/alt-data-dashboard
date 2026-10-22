@@ -1,12 +1,29 @@
 # Companies we track. Edit this file to add or remove tickers.
 # Everyone should use this list — do not hard-code tickers in collector scripts.
 #
-# Final list is still being decided by the team. These are placeholders.
+# First-pass list from the team (open to swaps until Sunday lock-in).
+# Note: SpaceX is private; "SPCX" is a placeholder and may not work with
+# stock-price APIs until we confirm a real public ticker or drop it.
 
 tickers:
-  - symbol: AAPL
-    name: Apple Inc.
-  - symbol: MSFT
-    name: Microsoft Corporation
-  - symbol: GOOGL
-    name: Alphabet Inc.
+  # Banks and asset management
+  - symbol: GS
+    name: Goldman Sachs
+  - symbol: JPM
+    name: JPMorgan
+  - symbol: BLK
+    name: BlackRock
+
+  # Fintech
+  - symbol: HOOD
+    name: Robinhood
+  - symbol: COIN
+    name: Coinbase
+  - symbol: PYPL
+    name: PayPal
+
+  # High attention / news coverage
+  - symbol: NVDA
+    name: NVIDIA
+  - symbol: SPCX
+    name: SpaceX
