@@ -1,29 +1,58 @@
-# Companies we track. Edit this file to add or remove tickers.
-# Everyone should use this list — do not hard-code tickers in collector scripts.
+# Single source of truth for tracked companies.
+# To add or remove a company, edit this file only.
+# No collector may hard-code tickers — always call load_tickers().
 #
-# First-pass list from the team (open to swaps until Sunday lock-in).
-# Note: SpaceX is private; "SPCX" is a placeholder and may not work with
-# stock-price APIs until we confirm a real public ticker or drop it.
+# wikipedia = English Wikipedia article title (underscores for spaces).
+# listed_since = first trading day when history is shorter than peers.
 
 tickers:
-  # Banks and asset management
   - symbol: GS
     name: Goldman Sachs
+    group: banks
+    wikipedia: Goldman_Sachs
+
   - symbol: JPM
-    name: JPMorgan
+    name: JPMorgan Chase
+    group: banks
+    wikipedia: JPMorgan_Chase
+
   - symbol: BLK
     name: BlackRock
+    group: banks
+    wikipedia: BlackRock
 
-  # Fintech
   - symbol: HOOD
-    name: Robinhood
+    name: Robinhood Markets
+    group: fintech
+    wikipedia: Robinhood_Markets
+
   - symbol: COIN
     name: Coinbase
+    group: fintech
+    wikipedia: Coinbase
+
   - symbol: PYPL
     name: PayPal
+    group: fintech
+    wikipedia: PayPal
 
-  # High attention / news coverage
   - symbol: NVDA
     name: NVIDIA
+    group: tech
+    wikipedia: Nvidia
+
   - symbol: SPCX
     name: SpaceX
+    group: tech
+    wikipedia: SpaceX
+    listed_since: "2026-06-12"  # Nasdaq IPO; shorter price history than peers (quoted = string)
+
+  - symbol: MSFT
+    name: Microsoft
+    group: tech
+    wikipedia: Microsoft
+
+  - symbol: AMD
+    name: Advanced Micro Devices
+    group: tech
+    wikipedia: AMD

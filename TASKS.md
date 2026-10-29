@@ -1,120 +1,71 @@
-# Starter tasks
+# Team tasks (updated Oct 29, 2026)
 
-Team checklist for the first version. **Claim a task in the team chat** (or edit this file and put your name next to it) so two people do not do the same work.
+Claim work in the **team chat** (or put your name below). We use this file instead of GitHub Issues to avoid notification noise for the wider org.
 
-These are **not** GitHub Issues on purpose — we keep planning here to avoid noisy notifications for the wider org.
-
----
-
-## 1. Pull daily prices for the tracked tickers
-
-**Goal:** Implement `collectors/prices.py` so it pulls daily closing prices for every ticker in `config/tickers.yaml`.
-
-**Why:** Prices are the baseline every other signal sits next to.
-
-**Suggested approach:**
-- Read tickers from `config/tickers.yaml`
-- Fetch daily closes (start with `yfinance`; Finnhub optional later)
-- Cache results under `data/`
-- Write the shared format: `date, ticker, signal, value, source`
-
-**Done when:**
-- [ ] `python collectors/prices.py` writes a file under `data/`
-- [ ] Output uses the shared columns
-- [ ] Tickers come from config (not hard-coded)
-
-**Claimed by:** _nobody yet_
+Workflow reminder: **branch → PR → 1 review**. Do not push straight to `main`.
 
 ---
 
-## 2. Define and document the shared data format
+## Status overview
 
-**Goal:** Short team reference for the tidy columns, plus a tiny example CSV.
+| Status | Task | Owner |
+|--------|------|--------|
+| ✅ | Ticker list locked (10 names in `config/tickers.yaml`) | Team |
+| ✅ | Shared data format documented (`docs/DATA_FORMAT.md`) | — |
+| ✅ | Shared helpers (`collectors/common.py`) | — |
+| 🔄 | Prices collector (`collectors/prices.py`) | **Ethan Thang** + **Justin Brown** — see `docs/GUIDE_PRICES.md` |
+| 🔄 | Wikipedia pageviews collector (`collectors/wiki_pageviews.py`) | **Kavi** (+ partner TBD) |
+| ⬜ | News sentiment collector | Unclaimed (Kavi interested) |
+| ⬜ | Dashboard prototype with fake data | Unclaimed — frontend not decided (Streamlit vs web app) |
+| ⬜ | Lead/lag analysis method | Ethan interested (after prices) |
+| ⬜ | Daily snapshots for job postings / app rankings | Unclaimed (stretch) |
+| ⬜ | Reddit / Google Trends access applications | Stretch — both need approval |
 
-**Shared format (starting point):**
+**Ava Donaldson** and **Ricky Rivas** have not claimed tasks yet. Good first options:
 
-| column | type | example |
-|--------|------|---------|
-| date | ISO date | 2026-10-22 |
-| ticker | string | AAPL |
-| signal | string | wiki_pageviews |
-| value | float | 48211 |
-| source | string | wikimedia |
-
-**Done when:**
-- [ ] README (or a short doc) explains the format with examples
-- [ ] Example file in `data/` (e.g. `data/example_signals.csv`) with a few fake rows
-- [ ] Agreed signal name strings for v1 (`price`, `news_sentiment`, `wiki_pageviews`, …)
-
-**Claimed by:** _nobody yet_
-
----
-
-## 3. Prototype one collector (news sentiment **or** Wikipedia pageviews)
-
-**Goal:** Working prototype of either `collectors/news_sentiment.py` or `collectors/wiki_pageviews.py`.
-
-**Why:** We need at least one alternative signal next to price for the first demo.
-
-**Options:**
-1. Wikipedia pageviews — Wikimedia API, free, “attention” signal
-2. News sentiment — e.g. GDELT + a simple score (FinBERT later if time)
-
-**Done when:**
-- [ ] Reads tickers from config
-- [ ] Writes shared columns
-- [ ] Runnable as `python collectors/<name>.py`
-- [ ] Short note in the PR/README on how to run it
-
-**Do not** scrape Reddit or Google Trends for v1 (stretch only).
-
-**Claimed by:** _nobody yet_
+- Dashboard prototype with fake data
+- Helping verify collector CSV output against `docs/DATA_FORMAT.md`
+- Research / cleanup of company metadata
 
 ---
 
-## 4. Prototype a dashboard page with fake data
+## Details
 
-**Goal:** Tiny page that charts price vs one signal using **fake/sample data**.
+### ✅ Ticker list (locked)
 
-**Why:** Lets us try Streamlit vs a web app with something visible before locking in.
+`GS, JPM, BLK, HOOD, COIN, PYPL, NVDA, SPCX, MSFT, AMD`
 
-**Done when:**
-- [ ] One page: ticker + price series + one fake signal
-- [ ] README note on how to run locally
-- [ ] Uses shared column names so real CSVs can drop in later
-- [ ] Treated as a prototype (not a final frontend decision)
+- Edit **only** `config/tickers.yaml` — no hard-coded ticker lists in scripts.
+- SPCX listed on Nasdaq **2026-06-12** (shorter price history; not a placeholder).
+- List may be trimmed later; keep everything config-driven.
 
-**Claimed by:** _nobody yet_
+### 🔄 Prices collector — Ethan + Justin
 
----
+- Implement `collectors/prices.py` using `load_tickers()` + `write_rows(..., "close_price")`.
+- Follow **`docs/GUIDE_PRICES.md`** (explains the task without giving the full solution).
+- Justin is newer to Python — pair and keep the code short/commented.
 
-## 5. Draft the lead/lag analysis method
+### 🔄 Wikipedia pageviews — Kavi (+ partner TBD)
 
-**Goal:** Notebook or short doc asking: does a signal move before price?
+- `collectors/wiki_pageviews.py` pulls daily `all-access` / `user` views from Wikimedia.
+- Output: `data/wiki_pageviews.csv` with `signal=wiki_pageviews`, `source=wikimedia`.
 
-**Suggested approach:**
-- Align signal values and returns by date
-- Lagged correlations: signal at t vs return at t+1 … t+k
-- Show a table/chart; note limitations (noise, correlation ≠ causation)
+### ⬜ News sentiment (unclaimed)
 
-**Done when:**
-- [ ] Something in `analysis/` a teammate can open and follow
-- [ ] Works on the shared format / example CSV
-- [ ] Explains the output in plain language
+- Likely GDELT + a simple score; FinBERT later if time/budget.
+- Same shared CSV format as other collectors.
 
-**Claimed by:** _nobody yet_
+### ⬜ Dashboard with fake data (unclaimed)
 
----
+- One page: price vs one signal using sample rows.
+- Do **not** lock the team into Streamlit vs a web app yet — treat as a prototype.
 
-## 6. Start daily snapshots for job postings / app rankings
+### ⬜ Lead/lag analysis (after prices)
 
-**Goal:** If we want these later, start saving dated snapshots early (little free history).
+- Align signal vs returns; lagged correlations; honest about noise.
+- Natural follow-on for Ethan once `close_price` exists.
 
-**Lower priority** than price + one attention/sentiment signal.
+### ⬜ Stretch
 
-**Done when:**
-- [ ] Document which free source(s) are realistic
-- [ ] Small script that saves a dated snapshot under `data/`
-- [ ] Notes on rate limits / terms of use
-
-**Claimed by:** _nobody yet_
+- Job postings / app ranking **daily snapshots** (little free history — start early if we care).
+- Reddit API and Google Trends access both need approval — do not scrape around them.

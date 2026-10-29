@@ -1,0 +1,4 @@
+date,ticker,signal,value,source
+2026-10-20,NVDA,wiki_pageviews,5277.0,wikimedia
+2026-10-21,NVDA,wiki_pageviews,4992.0,wikimedia
+2026-10-21,NVDA,close_price,185.42,yfinance

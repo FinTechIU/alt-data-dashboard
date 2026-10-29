@@ -1,8 +1,7 @@
-# Add packages here as we need them.
 # Install with: pip install -r requirements.txt
+# Keep this list small; add packages only when a collector needs them.
 
-# Likely early dependencies (uncomment when a collector needs them):
-# yfinance
-# pandas
-# pyyaml
-# requests
+pyyaml
+pandas
+yfinance
+requests

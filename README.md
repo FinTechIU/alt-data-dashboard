@@ -8,12 +8,14 @@ This is a student club project with a short timeline. We prefer a **small, worki
 
 Club members who want to research signals, and anyone viewing the project as a public showcase / portfolio piece.
 
+New to alternative data? Start with [Alt_Data_Simplified.md](Alt_Data_Simplified.md) — plain-language explanation of each data source and why it might matter.
+
 ## First version (planned)
 
-- About **8–10 tickers** (list lives in `config/tickers.yaml` — easy to change)
-- Daily **stock prices**
-- **News sentiment**
-- **Wikipedia pageviews** (attention)
+- **10 tickers** locked in `config/tickers.yaml` (may be trimmed later — edit that file only)
+- Daily **stock prices** (`close_price`) — Ethan + Justin
+- **Wikipedia pageviews** (`wiki_pageviews`) — Kavi
+- **News sentiment** — unclaimed
 
 Frontend choice (Streamlit vs a web app) is still open. The data layer stays independent either way.
 
@@ -21,24 +23,27 @@ Frontend choice (Streamlit vs a web app) is still open. The data layer stays ind
 
 ```
 alt-data-dashboard/
-├── config/tickers.yaml     # companies we track (edit here)
-├── collectors/             # one script per signal
-├── data/                   # output tables (decision TBD: commit or store elsewhere)
+├── config/tickers.yaml     # companies we track (edit here only)
+├── collectors/             # one script per signal + common.py helpers
+├── data/                   # shared-format CSVs (e.g. wiki_pageviews.csv)
+├── docs/                   # DATA_FORMAT.md, GUIDE_PRICES.md, …
 ├── analysis/               # notebooks / lead-lag experiments
 ├── dashboard/              # frontend (not locked in yet)
+├── Alt_Data_Simplified.md  # why each data source matters (plain language)
 ├── .env.example            # API key names only — copy to .env for real keys
+├── TASKS.md                # who is doing what
 ├── CONTRIBUTING.md         # how to make changes
 └── requirements.txt        # Python packages
 ```
 
 ### Shared data format
 
-Every collector should write rows like this (one row per date + ticker + signal):
+Full spec: [docs/DATA_FORMAT.md](docs/DATA_FORMAT.md). Short version — every collector writes:
 
 | column  | example           |
 |---------|-------------------|
 | date    | `2026-10-22`      |
-| ticker  | `AAPL`            |
+| ticker  | `NVDA`            |
 | signal  | `wiki_pageviews`  |
 | value   | `48211`           |
 | source  | `wikimedia`       |
@@ -65,10 +70,11 @@ That way a new signal can be added without rewriting the dashboard.
 
 4. **Optional API keys:** copy `.env.example` to `.env` and fill in values if a task needs them. Never commit `.env`.
 
-5. **Try a collector stub** (they print a placeholder until implemented):
+5. **Try a collector:**
 
    ```bash
-   python collectors/prices.py
+   python collectors/wiki_pageviews.py   # working attention signal
+   python collectors/prices.py           # stub — see docs/GUIDE_PRICES.md
    ```
 
 ## Timeline
