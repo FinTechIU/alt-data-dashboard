@@ -1,7 +1,8 @@
 # Install with: pip install -r requirements.txt
-# Keep this list small; add packages only when a collector needs them.
+# Keep this list small; add packages only when a collector/dashboard needs them.
 
 pyyaml
 pandas
 yfinance
 requests
+streamlit

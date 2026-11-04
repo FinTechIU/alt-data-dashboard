@@ -8,6 +8,20 @@ into every script. Import these helpers instead:
 
     from common import load_tickers, write_rows
 
+    tickers = load_tickers()
+    print(tickers[0]["symbol"])  # e.g. "GS"
+
+    rows = [
+        {
+            "date": "2026-10-21",
+            "ticker": "NVDA",
+            "signal": "close_price",
+            "value": 185.42,
+            "source": "yfinance",
+        }
+    ]
+    write_rows(rows, "close_price")  # -> data/close_price.csv
+
 Run collectors from the **repo root**, for example:
 
     python collectors/wiki_pageviews.py
@@ -34,7 +48,14 @@ def load_tickers() -> list[dict]:
     Read config/tickers.yaml and return a list of ticker dicts.
 
     Each dict has at least: symbol, name, group, wikipedia.
-    Some rows may also have listed_since (ISO date string).
+    Some rows may also have listed_since (ISO date string), e.g. SPCX and KLAR.
+
+    Example
+    -------
+    >>> tickers = load_tickers()
+    >>> symbols = [t["symbol"] for t in tickers]
+    >>> "KLAR" in symbols and "SPCX" in symbols
+    True
     """
     with TICKERS_PATH.open(encoding="utf-8") as f:
         payload = yaml.safe_load(f)
@@ -70,6 +91,14 @@ def write_rows(rows: list[dict], signal_name: str) -> Path:
     Returns
     -------
     Path to the CSV that was written.
+
+    Example
+    -------
+    >>> write_rows(
+    ...     [{"date": "2026-10-21", "ticker": "GS", "signal": "close_price",
+    ...       "value": 500.0, "source": "yfinance"}],
+    ...     "close_price",
+    ... )
     """
     if not rows:
         raise ValueError("write_rows received no rows — nothing to save.")

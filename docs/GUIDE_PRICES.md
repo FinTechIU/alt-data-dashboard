@@ -1,12 +1,13 @@
 # Guide: prices collector (for Ethan & Justin)
 
-This guide explains **what to build** in `collectors/prices.py`. It does **not** give you the finished code — that is your task. Pair on it; ask in the team chat when stuck.
+This guide explains **what to build** in `collectors/prices.py`. It does **not** give you the finished code — that is your task. You are pairing on this over **Nov 7–8, 2026**. Ask in the team chat when stuck.
 
 Read these first:
 
 1. [CONTRIBUTING.md](../CONTRIBUTING.md) — branch → PR → 1 review  
 2. [DATA_FORMAT.md](DATA_FORMAT.md) — the CSV columns every collector must write  
-3. `collectors/common.py` — helpers you should import (do not re-implement)
+3. [DATA_SOURCES.md](DATA_SOURCES.md) — why prices matter next to alt signals  
+4. `collectors/common.py` — helpers you should import (do not re-implement)
 
 ---
 
@@ -48,6 +49,8 @@ git checkout -b ethan-justin/prices-collector   # use your names / topic
 # ... edit collectors/prices.py, test it ...
 
 git add collectors/prices.py
+# If your run wrote data/close_price.csv and the team is committing data/, add that too:
+# git add data/close_price.csv
 git status   # make sure .env is NOT listed
 git commit -m "Add daily close prices collector"
 git push -u origin HEAD
@@ -63,16 +66,23 @@ Someone else reviews and approves (1 approval). Do **not** push straight to `mai
 
 ### Goal
 
-For every ticker in `config/tickers.yaml`, download **daily closing prices** and save them with the shared helper.
+For every ticker in `config/tickers.yaml` (**14 companies** right now), download **daily closing prices** and save them with the shared helper.
+
+Current symbols (do **not** hard-code this list — always call `load_tickers()`):
+
+`GS, JPM, BLK, HOOD, COIN, PYPL, NVDA, SPCX, MSFT, AMD, KLAR, CAT, SOFI, RMD`
 
 ### Required steps
 
 1. **Import helpers** from `common.py`: `load_tickers` and `write_rows`.
-2. **Call `load_tickers()`** — never hard-code `["GS", "JPM", ...]`. The list can change; config is the single source of truth.
+2. **Call `load_tickers()`** — never hard-code symbols. The list can change; config is the single source of truth.
 3. **Fetch daily closes** for each ticker.
    - Suggested library: **`yfinance`** (already in `requirements.txt`).
    - Suggested history start: **`2025-01-01`**.
-   - **SPCX** only started trading on **2026-06-12** (`listed_since` in the YAML). Expect missing rows before that date — that is normal, not a bug.
+   - **Short histories (normal, not bugs):**
+     - **KLAR** (Klarna) listed **2025-09-10** → no rows before that
+     - **SPCX** (SpaceX) listed **2026-06-12** → no rows before that  
+     Do **not** invent zeros or forward-fill fake prices for missing dates. Skip missing days.
 4. **Build a list of row dicts**, one per date per ticker:
 
    ```python
@@ -102,10 +112,10 @@ For every ticker in `config/tickers.yaml`, download **daily closing prices** and
 The stub in `collectors/prices.py` already has TODO comments that match this list:
 
 1. `load_tickers()`
-2. For each ticker, download history from `2025-01-01` (or from `listed_since` if you want to be fancy)
-3. Turn each close into a row dict
+2. For each ticker, download history from `2025-01-01` (you may start at `listed_since` when present to avoid empty requests)
+3. Turn each close into a row dict — **omit** dates with no real close
 4. `write_rows(all_rows, "close_price")`
-5. Print how many rows you wrote / which file path
+5. Print how many rows you wrote / which file path (and maybe how many tickers succeeded)
 
 Keep functions **short** and add a one-line comment when something is non-obvious.
 
@@ -123,8 +133,10 @@ Then open `data/close_price.csv` and confirm:
 - [ ] `signal` is always `close_price`
 - [ ] `source` is always `yfinance` (for this collector)
 - [ ] Dates look like `2026-10-21` (not timestamps with hours)
-- [ ] You see multiple tickers from the YAML (GS, JPM, …), not hard-coded leftovers
-- [ ] SPCX rows (if any) start on or after `2026-06-12`
+- [ ] You see all **14** tickers from the YAML (including KLAR, CAT, SOFI, RMD)
+- [ ] **KLAR** rows (if any) start on or after `2025-09-10`
+- [ ] **SPCX** rows (if any) start on or after `2026-06-12`
+- [ ] No fake `0.0` prices for pre-IPO dates
 
 Compare against [DATA_FORMAT.md](DATA_FORMAT.md) and `data/example_signals.csv`.
 
@@ -135,6 +147,7 @@ Compare against [DATA_FORMAT.md](DATA_FORMAT.md) and `data/example_signals.csv`.
 - Running `python collectors/prices.py` from the repo root writes `data/close_price.csv`
 - Tickers come only from `load_tickers()`
 - Columns match the shared format
+- Short-history tickers do not crash the script
 - PR opened with a short test note for the reviewer
 
 Good luck — ask Kavi or the team chat if the imports / YAML path confuse you. That is a normal first hurdle, not a failure.

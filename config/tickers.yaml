@@ -3,7 +3,9 @@
 # No collector may hard-code tickers — always call load_tickers().
 #
 # wikipedia = English Wikipedia article title (underscores for spaces).
-# listed_since = first trading day when history is shorter than peers.
+# listed_since = first trading day when history is shorter than peers (quoted string).
+# group = banks | fintech | tech | research_coverage
+#   research_coverage = companies Gabriel's research groups follow.
 
 tickers:
   - symbol: GS
@@ -45,7 +47,7 @@ tickers:
     name: SpaceX
     group: tech
     wikipedia: SpaceX
-    listed_since: "2026-06-12"  # Nasdaq IPO; shorter price history than peers (quoted = string)
+    listed_since: "2026-06-12"  # Nasdaq IPO; shorter price history than peers
 
   - symbol: MSFT
     name: Microsoft
@@ -56,3 +58,25 @@ tickers:
     name: Advanced Micro Devices
     group: tech
     wikipedia: AMD
+
+  # Club research-group coverage (added Nov 2026 via Gabriel)
+  - symbol: KLAR
+    name: Klarna
+    group: research_coverage
+    wikipedia: Klarna
+    listed_since: "2025-09-10"  # NYSE IPO; shorter history, not a placeholder
+
+  - symbol: CAT
+    name: Caterpillar
+    group: research_coverage
+    wikipedia: Caterpillar_Inc.
+
+  - symbol: SOFI
+    name: SoFi Technologies
+    group: research_coverage
+    wikipedia: SoFi
+
+  - symbol: RMD
+    name: ResMed
+    group: research_coverage
+    wikipedia: ResMed

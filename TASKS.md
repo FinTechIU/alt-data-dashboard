@@ -1,8 +1,10 @@
-# Team tasks (updated Oct 29, 2026)
+# Team tasks (updated Nov 3, 2026)
 
 Claim work in the **team chat** (or put your name below). We use this file instead of GitHub Issues to avoid notification noise for the wider org.
 
 Workflow reminder: **branch → PR → 1 review**. Do not push straight to `main`.
+
+**Target:** working v1 (prices + Wikipedia pageviews on a basic dashboard) by **early next week**. Presentation date still pending from Gabriel.
 
 ---
 
@@ -10,62 +12,59 @@ Workflow reminder: **branch → PR → 1 review**. Do not push straight to `main
 
 | Status | Task | Owner |
 |--------|------|--------|
-| ✅ | Ticker list locked (10 names in `config/tickers.yaml`) | Team |
-| ✅ | Shared data format documented (`docs/DATA_FORMAT.md`) | — |
+| ✅ | Ticker list: **14** (incl. research-group companies) | Team + Gabriel |
+| ✅ | Shared data format (`docs/DATA_FORMAT.md`) | — |
+| ✅ | Data sources guide (`docs/DATA_SOURCES.md`) | — |
 | ✅ | Shared helpers (`collectors/common.py`) | — |
-| 🔄 | Prices collector (`collectors/prices.py`) | **Ethan Thang** + **Justin Brown** — see `docs/GUIDE_PRICES.md` |
-| 🔄 | Wikipedia pageviews collector (`collectors/wiki_pageviews.py`) | **Kavi** (+ partner TBD) |
-| ⬜ | News sentiment collector | Unclaimed (Kavi interested) |
-| ⬜ | Dashboard prototype with fake data | Unclaimed — frontend not decided (Streamlit vs web app) |
-| ⬜ | Lead/lag analysis method | Ethan interested (after prices) |
-| ⬜ | Daily snapshots for job postings / app rankings | Unclaimed (stretch) |
-| ⬜ | Reddit / Google Trends access applications | Stretch — both need approval |
+| 🔄 | Prices collector (`collectors/prices.py`) | **Ethan + Justin** — session **Nov 7–8**; see `docs/GUIDE_PRICES.md` |
+| 🔄 | Wikipedia pageviews collector | **Kavi** |
+| 🔄 | Dashboard prototype (Streamlit) | **Kavi** |
+| ⬜ | News sentiment collector | Next after v1 (Kavi interested) |
+| ⬜ | Lead/lag analysis | Ethan interested (after prices) |
+| ⬜ | Company-specific signals for 2–3 featured names | Later (candidates: COIN/HOOD, NVDA, research-group names) |
+| ⬜ | Job postings / app ranking snapshots | Stretch |
+| ⬜ | Reddit / Google Trends | On hold — need approval |
 
-**Ava Donaldson** and **Ricky Rivas** have not claimed tasks yet. Good first options:
+**Ava Donaldson** and **Ricky Rivas** — no tasks claimed yet. Good first options:
 
-- Dashboard prototype with fake data
-- Helping verify collector CSV output against `docs/DATA_FORMAT.md`
-- Research / cleanup of company metadata
+- Check collector CSV output against `docs/DATA_FORMAT.md`
+- Research one research-group company (KLAR, CAT, SOFI, or RMD) for likely signals
+- Help verify dashboard charts look sane once prices land
 
 ---
 
 ## Details
 
-### ✅ Ticker list (locked)
+### ✅ Ticker list (14)
 
-`GS, JPM, BLK, HOOD, COIN, PYPL, NVDA, SPCX, MSFT, AMD`
+`GS, JPM, BLK, HOOD, COIN, PYPL, NVDA, SPCX, MSFT, AMD, KLAR, CAT, SOFI, RMD`
 
-- Edit **only** `config/tickers.yaml` — no hard-coded ticker lists in scripts.
-- SPCX listed on Nasdaq **2026-06-12** (shorter price history; not a placeholder).
-- List may be trimmed later; keep everything config-driven.
+- Edit **only** `config/tickers.yaml`.
+- `group: research_coverage` = companies club research groups follow (from Gabriel).
+- Short histories (no fake zeros): **KLAR** from **2025-09-10**, **SPCX** from **2026-06-12**.
 
-### 🔄 Prices collector — Ethan + Justin
+### 🔄 Prices — Ethan + Justin (Nov 7–8)
 
-- Implement `collectors/prices.py` using `load_tickers()` + `write_rows(..., "close_price")`.
-- Follow **`docs/GUIDE_PRICES.md`** (explains the task without giving the full solution).
-- Justin is newer to Python — pair and keep the code short/commented.
+- Implement the stub; follow **`docs/GUIDE_PRICES.md`**.
+- Justin is newer to Python — pair and keep code short/commented.
 
-### 🔄 Wikipedia pageviews — Kavi (+ partner TBD)
+### 🔄 Wikipedia pageviews — Kavi
 
-- `collectors/wiki_pageviews.py` pulls daily `all-access` / `user` views from Wikimedia.
-- Output: `data/wiki_pageviews.csv` with `signal=wiki_pageviews`, `source=wikimedia`.
+- `python collectors/wiki_pageviews.py` → `data/wiki_pageviews.csv`
 
-### ⬜ News sentiment (unclaimed)
+### 🔄 Dashboard prototype — Kavi (Streamlit)
 
-- Likely GDELT + a simple score; FinBERT later if time/budget.
-- Same shared CSV format as other collectors.
+```bash
+streamlit run dashboard/app.py
+```
 
-### ⬜ Dashboard with fake data (unclaimed)
+- Uses real wiki pageviews when present; **fake prices** until the prices PR merges.
+- Framework choice for v1: **Streamlit** (fastest for a beginner team). Can revisit later.
 
-- One page: price vs one signal using sample rows.
-- Do **not** lock the team into Streamlit vs a web app yet — treat as a prototype.
+### ⬜ After v1
 
-### ⬜ Lead/lag analysis (after prices)
-
-- Align signal vs returns; lagged correlations; honest about noise.
-- Natural follow-on for Ethan once `close_price` exists.
-
-### ⬜ Stretch
-
-- Job postings / app ranking **daily snapshots** (little free history — start early if we care).
-- Reddit API and Google Trends access both need approval — do not scrape around them.
+1. Merge prices PR → swap fake prices for real ones.
+2. News sentiment (FinBERT).
+3. Lead/lag view.
+4. Featured-company story for the presentation.
+5. Deploy / link from `ft-iu-site` (decide with Gabriel).
